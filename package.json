@@ -2,14 +2,14 @@
   "name": "nobot",
   "version": "0.0.1",
   "description": "IRC bot",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
+  "main": "./index",
   "author": "Brandon Chartier",
-  "license": "ISC",
   "dependencies": {
+    "coffee-script": "^1.7.1",
     "irc": "^0.3.7",
     "request": "^2.37.0"
+  },
+  "scripts": {
+    "test": "coffee index.coffee --nodejs"
   }
 }
