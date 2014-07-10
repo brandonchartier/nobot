@@ -21,7 +21,7 @@ youtube = (query, done) ->
       "q": query
   request params, (err, res, body) ->
     done err if err
-    videos = (JSON.parse body).feed.entry
+    videos = body.feed.entry
     done null, "File not found" unless videos?
     (sample videos).link.forEach (link) ->
       if link.rel is "alternate" and link.type is "text/html"
@@ -38,7 +38,7 @@ image = (query, done) ->
       "q": query
   request params, (err, res, body) ->
     done err if err
-    images = (JSON.parse body).responseData?.results
+    images = body.responseData?.results
     done null, (sample images).unescapedUrl if images?.length
 
 re =
