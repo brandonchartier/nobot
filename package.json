@@ -10,6 +10,6 @@
     "request": "^2.37.0"
   },
   "scripts": {
-    "test": "coffee index.coffee --nodejs"
+    "start": "coffee index.coffee --nodejs"
   }
 }
