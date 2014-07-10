@@ -1,6 +1,9 @@
+Cleverbot = require "cleverbot-node"
 irc = require "irc"
 request = require "request"
 config = require "./config"
+
+cleverbot = new Cleverbot()
 
 bot = new irc.Client config.server, config.nick,
   channels: config.channels
@@ -41,6 +44,10 @@ image = (query, done) ->
     images = body.responseData?.results
     done null, (sample images).unescapedUrl if images?.length
 
+clever = (query, done) ->
+  cleverbot.write query, (clvr) ->
+    done clvr.message
+
 re =
   nick: new RegExp "#{config.nick}.?\\s+(.*)"
   youtube: /(?:video|youtube)\s(?:of\s)?(.*)/i
@@ -56,6 +63,9 @@ bot.addListener "message", (nick, to, text, message) ->
     else if re.image.test text
       image (re.image.exec text)[1], (err, msg) ->
         console.error err if err
+        bot.say to, msg
+    else
+      clever (re.nick.exec text)[1], (msg) ->
         bot.say to, msg
 
 bot.addListener "error", (message) ->
