@@ -41,7 +41,7 @@ image = (query, done) ->
     images = (JSON.parse body).responseData?.results
     done null, (sample images).unescapedUrl if images?.length
 
-re:
+re =
   nick: new RegExp "#{config.nick}.?\\s+(.*)"
   youtube: /(?:video|youtube)\s(?:of\s)?(.*)/i
   image: /image\s(?:of\s)?(.*)/i
