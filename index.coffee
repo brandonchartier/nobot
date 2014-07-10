@@ -22,7 +22,7 @@ youtube = (query, done) ->
   request params, (err, res, body) ->
     done err if err
     videos = (JSON.parse body).feed.entry
-    done "File not found" unless videos?
+    done null, "File not found" unless videos?
     (sample videos).link.forEach (link) ->
       if link.rel is "alternate" and link.type is "text/html"
         done null, link.href
