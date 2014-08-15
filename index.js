@@ -49,7 +49,7 @@ var image = function(query, done) {
       "rsz": "8",
       "safe": "active",
       "q": query
-    };
+    }
   };
   request(params, function(err, res, body) {
     if (err) done(err);
