@@ -71,7 +71,7 @@ var clever = function(query, done) {
 var re = {
   nick: new RegExp(config.nick + ".?\\s+(.*)"),
   youtube: /(?:video|youtube)\s(?:of\s)?(.*)/i,
-  image: /images\s(?:of\s)?(.*)/i
+  image: /(?:image|img)\s(?:of\s)?(.*)/i
 };
 
 bot.addListener("message", function(nick, to, text, message) {
