@@ -40,7 +40,7 @@ var youtube = function(query, done) {
   });
 };
 
-var image = functino(query, done) {
+var image = function(query, done) {
   var params = {
     uri: "http://ajax.googleapis.com/ajax/services/search/images",
     json: true,
