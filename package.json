@@ -1,16 +1,15 @@
 {
   "name": "nobot",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "IRC bot",
-  "main": "./index",
+  "main": "index.js",
   "author": "Brandon Chartier",
   "dependencies": {
     "cleverbot-node": "^0.1.8",
-    "coffee-script": "^1.7.1",
     "irc": "^0.3.7",
-    "request": "^2.37.0"
+    "request": "^2.40.0"
   },
   "scripts": {
-    "start": "coffee index.coffee --nodejs"
+    "start": "node index.js"
   }
 }
