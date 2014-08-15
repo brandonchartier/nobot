@@ -24,7 +24,7 @@ var youtube = function(query, done) {
       "max-results": 15,
       "alt": "json",
       "q": query
-    };
+    }
   };
   request(params, function(err, res, body) {
     if (err) done(err);
