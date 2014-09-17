@@ -80,16 +80,16 @@ bot.addListener("message", function(nick, to, text, message) {
     if (re.youtube.test(text)) {
       youtube((re.youtube.exec(text))[1], function(err, msg) {
         if (err) console.error(err);
-        bot.say(to, msg);
+        bot.say(to, nick + ": " + msg);
       });
     } else if (re.image.test(text)) {
       image((re.image.exec(text))[1], function(err, msg) {
         if (err) console.error(err);
-        bot.say(to, msg);
+        bot.say(to, nick + ": " + msg);
       });
     } else {
       clever((re.nick.exec(text))[1], function(msg) {
-        bot.say(to, msg);
+        bot.say(to, nick + ": " + msg);
       });
     }
   }
