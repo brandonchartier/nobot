@@ -27,10 +27,10 @@ var youtube = function(query, done) {
     }
   };
   request(params, function(err, res, body) {
-    if (err) done(err);
+    if (err) return done(err);
     var videos = body.feed.entry;
     if (!videos) {
-      done(null, "File not found");
+      return done(null, "File not found");
     }
     (sample(videos)).link.forEach(function(link) {
       if (link.rel === "alternate" && link.type === "text/html") {
@@ -52,12 +52,16 @@ var image = function(query, done) {
     }
   };
   request(params, function(err, res, body) {
-    if (err) done(err);
+    if (err) return done(err);
     if (body.responseData) {
       var images = body.responseData.results;
       if (images && images.length) {
         done(null, (sample(images)).unescapedUrl);
+      } else {
+        done(null, "File not found");
       }
+    } else {
+      done(null, "File not found");
     }
   });
 };
@@ -76,22 +80,21 @@ var re = {
 
 bot.addListener("message", function(nick, to, text, message) {
   if (config.nick === to) return;
-  if (re.nick.test(text)) {
-    if (re.youtube.test(text)) {
-      youtube((re.youtube.exec(text))[1], function(err, msg) {
-        if (err) console.error(err);
-        bot.say(to, nick + ": " + msg);
-      });
-    } else if (re.image.test(text)) {
-      image((re.image.exec(text))[1], function(err, msg) {
-        if (err) console.error(err);
-        bot.say(to, nick + ": " + msg);
-      });
-    } else {
-      clever((re.nick.exec(text))[1], function(msg) {
-        bot.say(to, nick + ": " + msg);
-      });
-    }
+  if (!re.nick.test(text)) return;
+  if (re.youtube.test(text)) {
+    youtube((re.youtube.exec(text))[1], function(err, msg) {
+      if (err) return console.error(err);
+      bot.say(to, nick + ": " + msg);
+    });
+  } else if (re.image.test(text)) {
+    image((re.image.exec(text))[1], function(err, msg) {
+      if (err) return console.error(err);
+      bot.say(to, nick + ": " + msg);
+    });
+  } else {
+    clever((re.nick.exec(text))[1], function(msg) {
+      bot.say(to, nick + ": " + msg);
+    });
   }
 });
 
