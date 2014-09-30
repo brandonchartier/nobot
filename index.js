@@ -53,13 +53,8 @@ var image = function(query, done) {
   };
   request(params, function(err, res, body) {
     if (err) return done(err);
-    if (body.responseData) {
-      var images = body.responseData.results;
-      if (images && images.length) {
-        done(null, (sample(images)).unescapedUrl);
-      } else {
-        done(null, "File not found");
-      }
+    if (body.responseData && body.responseData.results && body.responseData.results.length) {
+      done(null, (sample(body.responseData.results)).unescapedUrl);
     } else {
       done(null, "File not found");
     }
