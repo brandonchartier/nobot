@@ -1,9 +1,14 @@
-var Cleverbot = require("cleverbot-node");
+var Cleverbot = require("cleverbot.io");
 var irc = require("irc");
 var request = require("request");
 var config = require("./config");
 
-var cleverbot = new Cleverbot();
+var cleverbot = new Cleverbot(config.api, config.key);
+cleverbot.setNick(config.nick);
+
+cleverbot.create(function(err, session) {
+  if (err) console.error(err);
+});
 
 var bot = new irc.Client(config.server, config.nick, {
   channels: config.channels,
@@ -62,8 +67,9 @@ var image = function(query, done) {
 };
 
 var clever = function(query, done) {
-  cleverbot.write(query, function(clvr) {
-    done(clvr.message);
+  cleverbot.ask(query, function(err, response) {
+    if (err) return done(err);
+    done(null, response);
   });
 };
 
@@ -87,7 +93,8 @@ bot.addListener("message", function(nick, to, text, message) {
       bot.say(to, nick + ": " + msg);
     });
   } else {
-    clever((re.nick.exec(text))[1], function(msg) {
+    clever((re.nick.exec(text))[1], function(err, msg) {
+      if (err) return console.error(err);
       bot.say(to, nick + ": " + msg);
     });
   }
