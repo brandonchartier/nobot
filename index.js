@@ -22,29 +22,27 @@ var sample = function(xs) {
 
 var youtube = function(query, done) {
   var params = {
-    uri: "http://gdata.youtube.com/feeds/api/videos",
+    uri: "https://www.googleapis.com/youtube/v3/search",
     json: true,
     qs: {
-      "orderBy": "relevance",
-      "max-results": 15,
-      "alt": "json",
-      "q": query
+      "part": "snippet",
+      "order": "viewCount",
+      "type": "video",
+      "q": query,
+      "key": config.youtube.key
     }
   };
 
   request(params, function(err, res, body) {
     if (err) return done(err);
-    var videos = body.feed.entry;
+    var videos = body.items;
 
     if (!videos) {
-      return done(null, "File not found");
+      return done(null, "Video not found");
     }
 
-    (sample(videos)).link.forEach(function(link) {
-      if (link.rel === "alternate" && link.type === "text/html") {
-        done(null, link.href);
-      }
-    });
+    var video = sample(videos).id.videoId;
+    done(null, "https://www.youtube.com/watch?v=" + video);
   });
 };
 
@@ -118,8 +116,10 @@ bot.addListener("message", function(nick, to, text, message) {
   if (!re.nick.test(text)) return;
 
   if (re.youtube.test(text)) {
-    // FIXME: YouTube API seems broken
-    bot.say(to, nick + ": No.");
+    youtube((re.youtube.exec(text))[1], function(err, msg) {
+      if (err) return console.error(err);
+      bot.say(to, nick + ": " + msg);
+    });
   } else if (re.image.test(text)) {
     image((re.image.exec(text))[1], function(err, msg) {
       if (err) return console.error(err);
