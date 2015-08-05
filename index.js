@@ -112,9 +112,14 @@ var re = {
 };
 
 bot.addListener("message", function(nick, to, text, message) {
+  // Don't bother replying to direct messages
   if (config.nick === to) return;
+
+  // Don't bother replying to messages that are not directed at me
   if (!re.nick.test(text)) return;
+
   if (re.youtube.test(text)) {
+    // FIXME: YouTube API seems broken
     bot.say(to, nick + ": No.");
   } else if (re.image.test(text)) {
     image((re.image.exec(text))[1], function(err, msg) {
@@ -122,9 +127,9 @@ bot.addListener("message", function(nick, to, text, message) {
       bot.say(to, nick + ": " + msg);
     });
   } else if (re.weather.test(text)) {
-    weather(config.weather.cities, function(err, msg) {
+    weather(config.weather.cities, function(err, cities) {
       if (err) return console.error(err);
-      msg.forEach(function(city) {
+      cities.forEach(function(city) {
         bot.say(to, city);
       });
     });
