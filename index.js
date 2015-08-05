@@ -1,4 +1,3 @@
-var async = require("async");
 var Cleverbot = require("cleverbot.io");
 var irc = require("irc");
 var request = require("request");
