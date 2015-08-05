@@ -5,6 +5,7 @@
   "main": "index.js",
   "author": "Brandon Chartier",
   "dependencies": {
+    "async": "^1.4.0",
     "cleverbot.io": "^1.0.4",
     "irc": "^0.3.7",
     "request": "^2.40.0"
