@@ -71,7 +71,7 @@ var image = function(query, done) {
 
 var weather = function(xs, done) {
   var ret = [];
-  var cnt = xs.length;
+  var len = xs.length;
 
   xs.forEach(function(x) {
     var params = {
@@ -80,7 +80,7 @@ var weather = function(xs, done) {
     };
 
     request(params, function(err, res, body) {
-      cnt--;
+      len--;
       if (err) return done(err);
 
       if (body.currently) {
@@ -89,7 +89,7 @@ var weather = function(xs, done) {
         ret.push(x.city + " not found");
       }
 
-      if (!cnt) done(null, ret);
+      if (!len) done(null, ret);
     });
   });
 };
