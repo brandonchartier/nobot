@@ -102,7 +102,7 @@ var clever = function(query, done) {
 };
 
 var re = {
-  nick: new RegExp(config.nick + "[^\\s]*\\s+(.*)|(.*)\\s+[^\\s]*" + config.nick, "i"),
+  nick: new RegExp(config.nick + "[^\\s]*\\s+(.+)|(.+)\\s+[^\\s]*" + config.nick, "i"),
   youtube: /(?:video|youtube)\s(?:of\s)?(.*)/i,
   image: /(?:image|img)\s(?:of\s)?(.*)/i,
   weather: /(?:weather)/i
