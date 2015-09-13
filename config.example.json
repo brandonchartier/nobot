@@ -1,0 +1,24 @@
+{
+  "nick":"irc_nick",
+  "server":"irc.example.org",
+  "channels":[
+    "#chan1",
+    "#chan2"
+  ],
+  "clever":{
+    "user":"cleverbot_api_user",
+    "key":"cleverbot_api_key"
+  },
+  "youtube":{
+    "key":"youtube_api_key"
+  },
+  "weather":{
+    "key":"forecast_api_key",
+    "cities":[
+      {
+        "city":"Ibiza, Spain",
+        "coords":"38.9800,1.4300"
+      }
+    ]
+  }
+}
