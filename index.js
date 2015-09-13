@@ -102,7 +102,7 @@ var clever = function(query, done) {
 };
 
 var re = {
-  nick: new RegExp(config.nick + ".?\\s+(.*)"),
+  nick: new RegExp(config.nick + "[^\\s]*\\s+(.*)|(.*)\\s+[^\\s]*" + config.nick, "i"),
   youtube: /(?:video|youtube)\s(?:of\s)?(.*)/i,
   image: /(?:image|img)\s(?:of\s)?(.*)/i,
   weather: /(?:weather)/i
@@ -133,7 +133,8 @@ bot.addListener("message", function(nick, to, text, message) {
       });
     });
   } else {
-    clever((re.nick.exec(text))[1], function(err, msg) {
+    var caps = re.nick.exec(text);
+    clever(caps[1] || caps[2], function(err, msg) {
       if (err) return console.error(err);
       bot.say(to, nick + ": " + msg);
     });
