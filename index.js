@@ -107,7 +107,7 @@ var rap = function(query, done) {
 
   var songSearchDone = function(err, songs) {
     if (err) return done(err);
-    if (songs.length === 0) return done("Rap not found");
+    if (songs.length === 0) return done(null, "Rap not found");
 
     rapgenius.searchLyricsAndExplanations(sample(songs).link, "rap", lyricsSearchDone);
   };
