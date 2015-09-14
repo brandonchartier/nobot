@@ -1,5 +1,6 @@
 var Cleverbot = require("cleverbot.io");
 var irc = require("irc");
+var rapgenius = require("rapgenius-js");
 var request = require("request");
 var config = require("./config");
 
@@ -94,6 +95,26 @@ var weather = function(xs, done) {
   });
 };
 
+var rap = function(query, done) {
+  var lyricsSearchDone = function(err, lyricsAndExplanations) {
+    if (err) return done(err);
+
+    var lyrics = lyricsAndExplanations.lyrics;
+    var lines = lyrics.getFullLyrics(false).split("\n");
+    lines = lines.filter(function(l) { return l });
+    done(null, lines.slice(0, 3).join(" / "));
+  };
+
+  var songSearchDone = function(err, songs) {
+    if (err) return done(err);
+    if (songs.length === 0) return done("Rap not found");
+
+    rapgenius.searchLyricsAndExplanations(sample(songs).link, "rap", lyricsSearchDone);
+  };
+
+  rapgenius.searchSong(query, "rap", songSearchDone);
+};
+
 var clever = function(query, done) {
   cleverbot.ask(query, function(err, response) {
     if (err) return done(err);
@@ -102,10 +123,11 @@ var clever = function(query, done) {
 };
 
 var re = {
-  nick: new RegExp(config.nick + "[^\\s]*\\s+(.+)|(.+)\\s+[^\\s]*" + config.nick, "i"),
-  youtube: /(?:video|youtube)\s(?:of\s)?(.*)/i,
-  image: /(?:image|img)\s(?:of\s)?(.*)/i,
-  weather: /(?:weather)/i
+  nick: new RegExp(config.nick + "[^\\s]*\\s+(.+)", "i"),
+  youtube: /(?:video|youtube)\s(?:of\s)?(.+)/i,
+  image: /(?:image|img)\s(?:of\s)?(.+)/i,
+  weather: /(?:weather)/i,
+  rap: /(?:rap)\s(?:about\s)?(.+)/i
 };
 
 bot.addListener("message", function(nick, to, text, message) {
@@ -132,9 +154,13 @@ bot.addListener("message", function(nick, to, text, message) {
         bot.say(to, city);
       });
     });
+  } else if (re.rap.test(text)) {
+    rap(re.rap.exec(text)[1], function (err, msg) {
+      if (err) return console.error(err);
+      bot.say(to, msg);
+    });
   } else {
-    var caps = re.nick.exec(text);
-    clever(caps[1] || caps[2], function(err, msg) {
+    clever(re.nick.exec(text)[1], function(err, msg) {
       if (err) return console.error(err);
       bot.say(to, nick + ": " + msg);
     });
