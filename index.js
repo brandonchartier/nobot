@@ -99,15 +99,17 @@ var rap = function(query, done) {
   var lyricsSearchDone = function(err, lyricsAndExplanations) {
     if (err) return done(err);
 
-    var lyrics = lyricsAndExplanations.lyrics;
-    var lines = lyrics.getFullLyrics(false).split("\n");
-    lines = lines.filter(function(l) { return l });
+    var lines = lyricsAndExplanations.lyrics
+      .getFullLyrics(false)
+      .split("\n")
+      .filter(function(l) { return l; });
+    
     done(null, lines.slice(0, 3).join(" / "));
   };
 
   var songSearchDone = function(err, songs) {
     if (err) return done(err);
-    if (songs.length === 0) return done(null, "Rap not found");
+    if (!songs.length) return done(null, "Rap not found");
 
     rapgenius.searchLyricsAndExplanations(sample(songs).link, "rap", lyricsSearchDone);
   };
