@@ -96,14 +96,14 @@ var weather = function(xs, done) {
 };
 
 var rap = function(query, done) {
-  var lyricsSearchDone = function(err, lyricsAndExplanations) {
+  var lyricsSearchDone = function(err, lyrics) {
     if (err) return done(err);
 
-    var lines = lyricsAndExplanations.lyrics
-      .getFullLyrics(false)
-      .split("\n")
-      .filter(function(l) { return l; });
-    
+    var lines = lyrics
+        .getFullLyrics(false)
+        .split("\n")
+        .filter(function(l) { return l; });
+
     done(null, lines.slice(0, 3).join(" / "));
   };
 
@@ -111,7 +111,7 @@ var rap = function(query, done) {
     if (err) return done(err);
     if (!songs.length) return done(null, "Rap not found");
 
-    rapgenius.searchLyricsAndExplanations(sample(songs).link, "rap", lyricsSearchDone);
+    rapgenius.searchSongLyrics(sample(songs).link, "rap", lyricsSearchDone);
   };
 
   rapgenius.searchSong(query, "rap", songSearchDone);
