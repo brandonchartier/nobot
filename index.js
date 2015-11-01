@@ -104,7 +104,10 @@ var rap = function(query, done) {
         .split("\n")
         .filter(function(l) { return l; });
 
-    done(null, lines.slice(0, 3).join(" / "));
+    var joined = lines.slice(0, 3).join(" / ");
+    if(joined.length > 420) return done(null, "Bad rap found: >420 chars");
+
+    done(null, joined);
   };
 
   var songSearchDone = function(err, songs) {
