@@ -96,22 +96,25 @@ var weather = function(xs, done) {
 };
 
 var rap = function(query, done) {
-  var lyricsSearchDone = function(err, lyricsAndExplanations) {
+  var lyricsSearchDone = function(err, lyrics) {
     if (err) return done(err);
 
-    var lines = lyricsAndExplanations.lyrics
-      .getFullLyrics(false)
-      .split("\n")
-      .filter(function(l) { return l; });
-    
-    done(null, lines.slice(0, 3).join(" / "));
+    var lines = lyrics
+        .getFullLyrics(false)
+        .split("\n")
+        .filter(function(l) { return l; });
+
+    var joined = lines.slice(0, 3).join(" / ");
+    if(joined.length > 420) return done(null, "Bad rap found: >420 chars");
+
+    done(null, joined);
   };
 
   var songSearchDone = function(err, songs) {
     if (err) return done(err);
     if (!songs.length) return done(null, "Rap not found");
 
-    rapgenius.searchLyricsAndExplanations(sample(songs).link, "rap", lyricsSearchDone);
+    rapgenius.searchSongLyrics(sample(songs).link, "rap", lyricsSearchDone);
   };
 
   rapgenius.searchSong(query, "rap", songSearchDone);
@@ -126,10 +129,10 @@ var clever = function(query, done) {
 
 var re = {
   nick: new RegExp(config.nick + "[^\\s]*\\s+(.+)", "i"),
-  youtube: /(?:video|youtube)\s(?:of\s)?(.+)/i,
-  image: /(?:image|img)\s(?:of\s)?(.+)/i,
-  weather: /(?:weather)/i,
-  rap: /(?:rap)\s(?:about\s)?(.+)/i
+  youtube: new RegExp(config.nick + "[^\\s]*\\s(?:video|youtube)\\s(?:of\\s)?(.+)", "i"),
+  image: new RegExp(config.nick + "[^\\s]*\\s(?:image|img)\\s(?:of\\s)?(.+)", "i"),
+  weather: new RegExp(config.nick + "[^\\s]*\\s(?:weather)", "i"),
+  rap: new RegExp(config.nick + "[^\\s]*\\s(?:rap)\\s(?:about\\s)?(.+)", "i")
 };
 
 bot.addListener("message", function(nick, to, text, message) {
