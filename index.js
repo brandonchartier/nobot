@@ -128,11 +128,11 @@ var clever = function(query, done) {
 };
 
 var re = {
-  nick: new RegExp(config.nick + "[^\\s]*\\s+(.+)", "i"),
-  youtube: new RegExp(config.nick + "[^\\s]*\\s(?:video|youtube)\\s(?:of\\s)?(.+)", "i"),
-  image: new RegExp(config.nick + "[^\\s]*\\s(?:image|img)\\s(?:of\\s)?(.+)", "i"),
-  weather: new RegExp(config.nick + "[^\\s]*\\s(?:weather)", "i"),
-  rap: new RegExp(config.nick + "[^\\s]*\\s(?:rap)\\s(?:about\\s)?(.+)", "i")
+  nick: new RegExp("^" + config.nick + "[^\\s]*\\s+(.+)", "i"),
+  youtube: new RegExp("^" + config.nick + "[^\\s]*\\s+(?:video|youtube)\\s(?:of\\s)?(.+)", "i"),
+  image: new RegExp("^" + config.nick + "[^\\s]*\\s+(?:image|img)\\s(?:of\\s)?(.+)", "i"),
+  weather: new RegExp("^" + config.nick + "[^\\s]*\\s+(?:weather)", "i"),
+  rap: new RegExp("^" + config.nick + "[^\\s]*\\s+(?:rap|sing)\\s(?:about\\s)?(.+)", "i")
 };
 
 bot.addListener("message", function(nick, to, text, message) {
