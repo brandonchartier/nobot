@@ -138,6 +138,9 @@ var re = {
 bot.addListener("message", function(nick, to, text, message) {
   // Don't bother replying to direct messages
   if (config.nick === to) return;
+  
+  // Don't bother replying to messages that are not directed at me
+  if (!re.nick.test(text)) return;
 
   if (re.youtube.test(text)) {
     youtube((re.youtube.exec(text))[1], function(err, msg) {
