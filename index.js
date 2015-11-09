@@ -105,7 +105,7 @@ var rap = function(query, done) {
         .filter(function(l) { return l; });
 
     var joined = lines.slice(0, 3).join(" / ");
-    if(joined.length > 420) return done(null, "Bad rap found: >420 chars");
+    if (joined.length > 420) return done(null, "Nazty rap");
 
     done(null, joined);
   };
@@ -138,9 +138,6 @@ var re = {
 bot.addListener("message", function(nick, to, text, message) {
   // Don't bother replying to direct messages
   if (config.nick === to) return;
-
-  // Don't bother replying to messages that are not directed at me
-  if (!re.nick.test(text)) return;
 
   if (re.youtube.test(text)) {
     youtube((re.youtube.exec(text))[1], function(err, msg) {
