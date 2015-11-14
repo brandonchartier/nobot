@@ -1,4 +1,5 @@
 var Cleverbot = require("cleverbot.io");
+var FeedParser = require("feedparser");
 var irc = require("irc");
 var rapgenius = require("rapgenius-js");
 var request = require("request");
@@ -120,6 +121,26 @@ var rap = function(query, done) {
   rapgenius.searchSong(query, "rap", songSearchDone);
 };
 
+var news = function(done) {
+  var items = [];
+  request("http://www.dailymail.co.uk/news/index.rss")
+      .pipe(new FeedParser())
+      .on('error', function() {
+        done(null, "Unable to parse news");
+      })
+      .on('readable', function() {
+        var item;
+        while(item = this.read()) {
+          items.push(item);
+        }
+      })
+      .on('end', function() {
+        var item = sample(items);
+        item.link = item.link.substr(0, item.link.indexOf(".html"));
+        done(null, item.title + "\n" + item.link);
+      });
+};
+
 var clever = function(query, done) {
   cleverbot.ask(query, function(err, response) {
     if (err) return done(err);
@@ -128,11 +149,12 @@ var clever = function(query, done) {
 };
 
 var re = {
-  nick: new RegExp(config.nick + "[^\\s]*\\s+(.+)", "i"),
-  youtube: new RegExp(config.nick + "[^\\s]*\\s(?:video|youtube)\\s(?:of\\s)?(.+)", "i"),
-  image: new RegExp(config.nick + "[^\\s]*\\s(?:image|img)\\s(?:of\\s)?(.+)", "i"),
-  weather: new RegExp(config.nick + "[^\\s]*\\s(?:weather)", "i"),
-  rap: new RegExp(config.nick + "[^\\s]*\\s(?:rap)\\s(?:about\\s)?(.+)", "i")
+  nick: new RegExp("^" + config.nick + "[^\\s]*\\s+(.+)", "i"),
+  youtube: new RegExp("^" + config.nick + "[^\\s]*\\s+(?:video|youtube)\\s(?:of\\s)?(.+)", "i"),
+  image: new RegExp("^" + config.nick + "[^\\s]*\\s+(?:image|img)\\s(?:of\\s)?(.+)", "i"),
+  weather: new RegExp("^" + config.nick + "[^\\s]*\\s+(?:weather)$", "i"),
+  rap: new RegExp("^" + config.nick + "[^\\s]*\\s+(?:rap|sing)\\s(?:about\\s)?(.+)", "i"),
+  news: new RegExp("^" + config.nick + "[^\\s]*\\s+(?:news)$", "i")
 };
 
 bot.addListener("message", function(nick, to, text, message) {
@@ -161,6 +183,11 @@ bot.addListener("message", function(nick, to, text, message) {
     });
   } else if (re.rap.test(text)) {
     rap(re.rap.exec(text)[1], function (err, msg) {
+      if (err) return console.error(err);
+      bot.say(to, msg);
+    });
+  } else if (re.news.test(text)) {
+    news(function(err, msg) {
       if (err) return console.error(err);
       bot.say(to, msg);
     });
