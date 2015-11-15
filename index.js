@@ -122,8 +122,10 @@ var rap = function(query, done) {
 };
 
 var news = function(done) {
+  var feed = sample(config.newsfeeds);
   var items = [];
-  request("http://www.dailymail.co.uk/news/index.rss")
+
+  request(feed)
       .pipe(new FeedParser())
       .on('error', function() {
         done(null, "Unable to parse news");
@@ -136,7 +138,6 @@ var news = function(done) {
       })
       .on('end', function() {
         var item = sample(items);
-        item.link = item.link.substr(0, item.link.indexOf(".html"));
         done(null, item.title + "\n" + item.link);
       });
 };
