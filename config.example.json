@@ -22,7 +22,7 @@
     ]
   },
   "newsfeeds":[
-    "rss_feed1",
-    "rss_feed2"
+    "feed_url_1",
+    "feed_url_2"
   ]
 }
