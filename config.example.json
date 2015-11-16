@@ -20,5 +20,9 @@
         "coords":"38.9800,1.4300"
       }
     ]
-  }
+  },
+  "newsfeeds":[
+    "feed_url_1",
+    "feed_url_2"
+  ]
 }
