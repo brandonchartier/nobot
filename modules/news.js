@@ -1,16 +1,18 @@
-var request = require("request");
+var _ = require("lodash");
+var config = require("../config");
 var FeedParser = require("feedparser");
+var request = require("request");
 
 var regex = new RegExp("^" + config.nick + "[^\\s]*\\s+(?:news)$", "i");
 
 function makeRequest(done) {
-  var feed = sample(config.newsfeeds);
+  var feed = _.sample(config.newsfeeds);
   var items = [];
 
   request(feed)
     .pipe(new FeedParser())
     .on('error', function () {
-      done(null, "Unable to parse news");
+      done(null, "News not found");
     })
     .on('readable', function () {
       var item;
@@ -19,7 +21,7 @@ function makeRequest(done) {
       }
     })
     .on('end', function () {
-      var item = sample(items);
+      var item = _.sample(items);
       done(null, item.title + "\n" + item.link);
     });
 }

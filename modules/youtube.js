@@ -1,4 +1,7 @@
+var _ = require("lodash");
+var config = require("../config");
 var request = require("request");
+
 var regex = new RegExp("^" + config.nick + "[^\\s]*\\s+(?:video|youtube)\\s(?:of\\s)?(.+)", "i");
 
 function makeRequest(query, done) {
@@ -22,7 +25,7 @@ function makeRequest(query, done) {
       return done(null, "Video not found", true);
     }
 
-    var video = sample(videos).id.videoId;
+    var video = _.sample(videos).id.videoId;
     done(null, "https://www.youtube.com/watch?v=" + video, true);
   });
 }

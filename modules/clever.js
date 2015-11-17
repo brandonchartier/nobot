@@ -1,4 +1,5 @@
 var Cleverbot = require("cleverbot.io");
+var config = require("../config");
 
 var cleverbot = new Cleverbot(config.clever.user, config.clever.key);
 cleverbot.setNick(config.nick);

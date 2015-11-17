@@ -1,29 +1,29 @@
+var _ = require("lodash");
+var config = require("../config");
 var rapgenius = require("rapgenius-js");
+
 var regex = new RegExp("^" + config.nick + "[^\\s]*\\s+(?:rap|sing)\\s(?:about\\s)?(.+)", "i");
 
 function makeRequest(query, done) {
-  var lyricsSearchDone = function (err, lyrics) {
+  function lyricsSearchDone(err, lyrics) {
     if (err) return done(err);
 
     var lines = lyrics
       .getFullLyrics(false)
-      .split("\n")
-      .filter(function (l) {
-        return l;
-      });
+      .split("\n");
 
-    var joined = lines.slice(0, 3).join(" / ");
+    var joined = _.compact(lines).slice(0, 3).join(" / ");
     if (joined.length > 420) return done(null, "Nazty rap", true);
 
     done(null, joined);
-  };
+  }
 
-  var songSearchDone = function (err, songs) {
+  function songSearchDone(err, songs) {
     if (err) return done(err);
     if (!songs.length) return done(null, "Rap not found", true);
 
-    rapgenius.searchSongLyrics(sample(songs).link, "rap", lyricsSearchDone);
-  };
+    rapgenius.searchSongLyrics(_.sample(songs).link, "rap", lyricsSearchDone);
+  }
 
   rapgenius.searchSong(query, "rap", songSearchDone);
 }

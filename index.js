@@ -1,15 +1,11 @@
-GLOBAL.config = require("./config");
-GLOBAL.sample = function (xs) {
-  return xs[Math.floor(Math.random() * xs.length)];
-};
-
 var clever = require("./modules/clever");
-var youtube = require("./modules/youtube");
+var config = require("./config");
 var image = require("./modules/image");
-var weather = require("./modules/weather");
-var rap = require("./modules/rap");
-var news = require("./modules/news");
 var irc = require("irc");
+var news = require("./modules/news");
+var rap = require("./modules/rap");
+var weather = require("./modules/weather");
+var youtube = require("./modules/youtube");
 
 var bot = new irc.Client(config.server, config.nick, {
   channels: config.channels,

@@ -1,4 +1,7 @@
+var _ = require("lodash");
+var config = require("../config");
 var request = require("request");
+
 var regex = new RegExp("^" + config.nick + "[^\\s]*\\s+(?:weather)$", "i");
 
 function makeRequest(xs, done) {
@@ -21,7 +24,7 @@ function makeRequest(xs, done) {
         ret.push(x.city + " not found");
       }
 
-      if (!len) done(null, ret.join("\n"));
+      if (!len) done(null, _.sortBy(ret).join("\n"));
     });
   });
 }
