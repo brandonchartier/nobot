@@ -4,35 +4,36 @@ var FeedParser = require("feedparser");
 var request = require("request");
 
 var regex = new RegExp("^" + config.nick + "[^\\s]*\\s+(?:news)$", "i");
+var items = [];
 
-function makeRequest(done) {
-  var feed = _.sample(config.newsfeeds);
-  var items = [];
+function refreshNews() {
+  items = [];
 
-  request(feed)
-    .pipe(new FeedParser())
-    .on('error', function () {
-      done(null, "News not found");
-    })
-    .on('readable', function () {
-      var item;
-      while (item = this.read()) {
-        items.push(item);
-      }
-    })
-    .on('end', function () {
-      var item = _.sample(items);
-      done(null, item.title + "\n" + item.link);
-    });
+  config.newsfeeds.forEach(function (feed) {
+    request(feed)
+      .pipe(new FeedParser())
+      .on('error', function (err) {
+        console.error(err);
+      })
+      .on('readable', function () {
+        var item;
+        while (item = this.read()) {
+          items.push(item);
+        }
+      });
+  });
 }
+
+refreshNews();
+setInterval(refreshNews, 60 * 60 * 1000); //Every hour
 
 function news(text, done) {
   var test = regex.test(text);
-  if (!test) {
-    return false;
-  }
+  if (!test) return false;
+  if (items.length === 0) return done(null, "News not found");
 
-  makeRequest(done);
+  var item = _.sample(items);
+  done(null, item.title + "\n" + item.link);
   return true;
 }
 
