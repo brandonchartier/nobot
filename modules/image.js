@@ -29,9 +29,7 @@ function makeRequest(query, done) {
 
 function image(text, done) {
   var capture = regex.exec(text);
-  if (!capture) {
-    return false;
-  }
+  if (!capture) return false;
 
   makeRequest(capture[1], done);
   return true;

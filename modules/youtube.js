@@ -20,10 +20,7 @@ function makeRequest(query, done) {
   request(params, function (err, res, body) {
     if (err) return done(err);
     var videos = body.items;
-
-    if (!videos) {
-      return done(null, "Video not found", true);
-    }
+    if (!videos) return done(null, "Video not found", true);
 
     var video = _.sample(videos).id.videoId;
     done(null, "https://www.youtube.com/watch?v=" + video, true);
@@ -32,9 +29,7 @@ function makeRequest(query, done) {
 
 function youtube(text, done) {
   var capture = regex.exec(text);
-  if (!capture) {
-    return false;
-  }
+  if (!capture) return false;
 
   makeRequest(capture[1], done);
   return true;

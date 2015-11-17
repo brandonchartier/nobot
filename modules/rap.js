@@ -8,13 +8,10 @@ function makeRequest(query, done) {
   function lyricsSearchDone(err, lyrics) {
     if (err) return done(err);
 
-    var lines = lyrics
-      .getFullLyrics(false)
-      .split("\n");
-
+    var lines = lyrics.getFullLyrics(false).split("\n");
     var joined = _.compact(lines).slice(0, 3).join(" / ");
-    if (joined.length > 420) return done(null, "Nazty rap", true);
 
+    if (joined.length > 420) return done(null, "Nazty rap", true);
     done(null, joined);
   }
 
@@ -30,9 +27,7 @@ function makeRequest(query, done) {
 
 function rap(text, done) {
   var capture = regex.exec(text);
-  if (!capture) {
-    return false;
-  }
+  if (!capture) return false;
 
   makeRequest(capture[1], done);
   return true;

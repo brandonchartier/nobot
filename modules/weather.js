@@ -31,9 +31,7 @@ function makeRequest(xs, done) {
 
 function weather(text, done) {
   var test = regex.test(text);
-  if (!test) {
-    return false;
-  }
+  if (!test) return false;
 
   makeRequest(config.weather.cities, done);
   return true;
