@@ -18,7 +18,7 @@ function makeRequest(nick, done, attempt) {
 
     var lang = langDetect.detect(comment, 1);
     if(lang.length && lang[0][0] === "english" && comment.length < 420) {
-      var time = _.padLeft(_.random(0, 24), 2, 0) + ":" + _.padLeft(_.random(0, 59), 2, 0);
+      var time = _.padLeft(_.random(0, 23), 2, 0) + ":" + _.padLeft(_.random(0, 59), 2, 0);
       done(null, "[" + time + "] " + "<@" + nick + "> " + comment, true);
     } else if (attempt < 8) {
       makeRequest(nick, done, attempt);
