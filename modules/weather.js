@@ -19,7 +19,7 @@ function makeRequest(xs, done) {
       if (err) return done(err);
 
       if (body.currently) {
-        ret.push(x.city + ": " + Math.round(body.currently.temperature) + "° " + body.currently.summary);
+        ret.push(x.city + ": " + Math.round(body.currently.temperature) + "Â° " + body.currently.summary);
       } else {
         ret.push(x.city + " not found");
       }
@@ -38,4 +38,3 @@ function weather(text, done) {
 }
 
 module.exports = weather;
-
