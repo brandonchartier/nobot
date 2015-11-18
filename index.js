@@ -1,5 +1,6 @@
 var clever = require("./modules/clever");
 var config = require("./config");
+var date = require("./modules/date");
 var image = require("./modules/image");
 var irc = require("irc");
 var news = require("./modules/news");
@@ -27,6 +28,8 @@ bot.addListener("message", function (nick, to, text) {
     case(rap(text, say)):
       break;
     case(news(text, say)):
+      break;
+    case(date(text, say)):
       break;
     default:
       clever(text, say);
