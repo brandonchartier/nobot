@@ -13,7 +13,7 @@ function makeRequest(query, done) {
       "order": "viewCount",
       "type": "video",
       "q": query,
-      "key": config.youtube.key
+      "key": config.google.key
     }
   };
 

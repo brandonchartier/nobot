@@ -9,8 +9,9 @@
     "user":"cleverbot_api_user",
     "key":"cleverbot_api_key"
   },
-  "youtube":{
-    "key":"youtube_api_key"
+  "google":{
+    "key":"google_api_key",
+    "cx": "search_engine_id"
   },
   "weather":{
     "key":"forecast_api_key",
