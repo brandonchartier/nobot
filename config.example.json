@@ -9,6 +9,9 @@
     "user":"cleverbot_api_user",
     "key":"cleverbot_api_key"
   },
+  "musix": {
+    "key": "musixmatch_api_key"
+  },
   "google":{
     "key":"google_api_key",
     "cx": "search_engine_id"
