@@ -9,7 +9,7 @@ function makeRequest(query, done) {
     if (err) return done(err);
 
     var tracks = body.message.body.track_list;
-    if (!tracks) return done(null, "Rap not found", true);
+    if (!tracks || !tracks.length) return done(null, "Rap not found", true);
 
     var lyricsParams = {
       uri: "http://api.musixmatch.com/ws/1.1/track.lyrics.get",
