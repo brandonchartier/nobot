@@ -6,21 +6,21 @@ var regex = new RegExp("^" + config.nick + "[^\\s]*\\s+(?:image|img)\\s(?:of\\s)
 
 function makeRequest(query, done) {
   var params = {
-    uri: "http://ajax.googleapis.com/ajax/services/search/images",
+    uri: "https://www.googleapis.com/customsearch/v1",
     json: true,
     qs: {
-      "v": "1.0",
-      "rsz": "8",
-      "safe": "active",
-      "q": query
+      "q": query,
+      "cx": config.google.cx,
+      "searchType": "image",
+      "key": config.google.key
     }
   };
 
   request(params, function (err, res, body) {
     if (err) return done(err);
 
-    if (body.responseData && body.responseData.results && body.responseData.results.length) {
-      done(null, (_.sample(body.responseData.results)).unescapedUrl, true);
+    if (body && body.items && body.items.length) {
+      done(null, (_.sample(body.items)).link, true);
     } else {
       done(null, "File not found", true);
     }
