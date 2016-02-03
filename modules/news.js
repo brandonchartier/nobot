@@ -1,40 +1,38 @@
-var _ = require("lodash");
-var config = require("../config");
-var FeedParser = require("feedparser");
-var request = require("request");
+const _ = require('lodash');
+const async = require('async');
+const config = require('../config');
+const FeedParser = require('feedparser');
+const request = require('request');
 
-var regex = new RegExp("^" + config.nick + "[^\\s]*\\s+(?:news)$", "i");
-var items = [];
+let regex = new RegExp(`^${config.nick}[^\\s]*\\s+(?:news)$`, 'i');
 
-function refreshNews() {
-  items = [];
+let cache = [];
 
-  config.newsfeeds.forEach(function (feed) {
-    request(feed)
-      .pipe(new FeedParser())
-      .on('error', function (err) {
-        console.error(err);
-      })
-      .on('readable', function () {
-        var item;
-        while (item = this.read()) {
-          items.push(item);
-        }
+let refreshNews = () => {
+  async.map(config.newsfeeds, (feed, done) => {
+    request(feed).pipe(new FeedParser())
+      .on('error', (err) => done(err))
+      .on('readable', () => {
+        while (let item = this.read()) done(null, item);
       });
-  });
-}
+  }, (err, results) => {
+    if (err) return console.error(err);
+    cache = results;
+  })
+};
 
 refreshNews();
 setInterval(refreshNews, 60 * 60 * 1000); //Every hour
 
-function news(text, done) {
-  var test = regex.test(text);
-  if (!test) return false;
-  if (items.length === 0) return done(null, "News not found");
+let news = (text, done) => {
+  if (!regex.test(text)) return false;
 
-  var item = _.sample(items);
-  done(null, item.title + "\n" + item.link);
+  if (!items.length) return done(null, 'News not found');
+
+  let item = _.sample(cache);
+  done(null, `${item.title}\n${item.link}`);
+
   return true;
-}
+};
 
 module.exports = news;

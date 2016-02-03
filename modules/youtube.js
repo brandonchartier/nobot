@@ -1,38 +1,39 @@
-var _ = require("lodash");
-var config = require("../config");
-var request = require("request");
+const _ = require('lodash');
+const config = require('../config');
+const request = require('request');
 
-var regex = new RegExp("^" + config.nick + "[^\\s]*\\s+(?:video|youtube)\\s(?:of\\s)?(.+)", "i");
+let regex = new RegExp(`^${config.nick}[^\\s]*\\s+(?:video|youtube)\\s(?:of\\s)?(.+)`, 'i');
 
-function makeRequest(query, done) {
-  var params = {
-    uri: "https://www.googleapis.com/youtube/v3/search",
+let makeRequest = (query, done) => {
+  const params = {
+    uri: 'https://www.googleapis.com/youtube/v3/search',
     json: true,
     qs: {
-      "part": "snippet",
-      "order": "viewCount",
-      "type": "video",
-      "q": query,
-      "key": config.google.key
+      'part': 'snippet',
+      'order': 'viewCount',
+      'type': 'video',
+      'q': query,
+      'key': config.google.key
     }
   };
 
-  request(params, function (err, res, body) {
+  request(params, (err, res, body) => {
     if (err) return done(err);
-    var videos = body.items;
-    if (!videos) return done(null, "Video not found", true);
 
-    var video = _.sample(videos).id.videoId;
-    done(null, "https://www.youtube.com/watch?v=" + video, true);
+    let videos = body.items;
+    if (!videos) return done(null, 'Video not found', true);
+
+    let video = _.sample(videos).id.videoId;
+    done(null, `https://www.youtube.com/watch?v=${video}`, true);
   });
-}
+};
 
-function youtube(text, done) {
-  var capture = regex.exec(text);
+let youtube = (text, done) => {
+  let capture = regex.exec(text);
   if (!capture) return false;
 
   makeRequest(capture[1], done);
   return true;
-}
+};
 
 module.exports = youtube;

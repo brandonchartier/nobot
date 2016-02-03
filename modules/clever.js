@@ -1,29 +1,27 @@
-var Cleverbot = require("cleverbot.io");
-var config = require("../config");
+const Cleverbot = require('cleverbot.io');
+const config = require('../config');
 
-var cleverbot = new Cleverbot(config.clever.user, config.clever.key);
+let cleverbot = new Cleverbot(config.clever.user, config.clever.key);
+
 cleverbot.setNick(config.nick);
-cleverbot.create(function (err) {
-  if (err) console.error(err);
-});
+cleverbot.create(err => if (err) console.error(err));
 
-var regex = new RegExp("^" + config.nick + "[^\\s]*\\s+(.+)", "i");
+let regex = new RegExp(`^${config.nick}[^\\s]*\\s+(.+)`, 'i');
 
-function makeRequest(query, done) {
-  cleverbot.ask(query, function (err, response) {
+let makeRequest = (query, done) => {
+  cleverbot.ask(query, (err, res) => {
     if (err) return done(err);
-    done(null, response, true);
-  });
-}
+    done(null, res, true);
+  })
+};
 
-function clever(text, done) {
-  var capture = regex.exec(text);
-  if (!capture) {
-    return false;
-  }
+let clever = (text, done) => {
+  let capture = regex.exec(text);
+
+  if (!capture) return false;
 
   makeRequest(capture[1], done);
   return true;
-}
+};
 
 module.exports = clever;

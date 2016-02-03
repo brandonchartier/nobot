@@ -1,22 +1,27 @@
-var clever = require("./modules/clever");
-var config = require("./config");
-var date = require("./modules/date");
-var image = require("./modules/image");
-var irc = require("irc");
-var news = require("./modules/news");
-var rap = require("./modules/rap");
-var weather = require("./modules/weather");
-var youtube = require("./modules/youtube");
+const clever = require('./modules/clever');
+const config = require('./config');
+const date = require('./modules/date');
+const image = require('./modules/image');
+const irc = require('irc');
+const news = require('./modules/news');
+const rap = require('./modules/rap');
+const weather = require('./modules/weather');
+const youtube = require('./modules/youtube');
 
-var bot = new irc.Client(config.server, config.nick, {
+let bot = new irc.Client(config.server, config.nick), {
   channels: config.channels,
   floodProtection: true,
   realName: config.nick
 });
 
-bot.addListener("message", function (nick, to, text) {
+bot.addListener('message', (nick, to, text) => {
   // Don't bother replying to direct messages
-  if (config.nick === to) return;
+  if (to === config.nick) return;
+
+  let say = (err, msg, toNick) => {
+    if (err) return console.error(err);
+    bot.say(to, toNick ? `${nick}: ${msg}` : msg);
+  };
 
   switch (true) {
     case(youtube(text, say)):
@@ -34,13 +39,6 @@ bot.addListener("message", function (nick, to, text) {
     default:
       clever(text, say);
   }
-
-  function say(err, msg, toNick) {
-    if (err) return console.error(err);
-    bot.say(to, toNick ? nick + ": " + msg : msg);
-  }
 });
 
-bot.addListener("error", function (message) {
-  console.error(message);
-});
+bot.addListener('error', message => console.error(message));
