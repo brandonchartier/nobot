@@ -1,10 +1,14 @@
+'use strict';
+
 const Cleverbot = require('cleverbot.io');
 const config = require('../config');
 
 let cleverbot = new Cleverbot(config.clever.user, config.clever.key);
 
 cleverbot.setNick(config.nick);
-cleverbot.create(err => if (err) console.error(err));
+cleverbot.create(err => {
+  if (err) console.error(err)
+});
 
 let regex = new RegExp(`^${config.nick}[^\\s]*\\s+(.+)`, 'i');
 

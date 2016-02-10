@@ -1,3 +1,5 @@
+'use strict';
+
 const _ = require('lodash');
 const async = require('async');
 const config = require('../config');
@@ -7,7 +9,7 @@ let regex = new RegExp(`^${config.nick}[^\\s]*\\s+(?:weather)$`, 'i');
 
 let iterator = (x, done) => {
   const params = {
-    uri `https://api.forecast.io/forecast/${config.weather.key}/${x.coords}`,
+    uri: `https://api.forecast.io/forecast/${config.weather.key}/${x.coords}`,
     json: true
   };
 

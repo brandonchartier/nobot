@@ -1,3 +1,5 @@
+'use strict';
+
 const _ = require('lodash');
 const async = require('async');
 const config = require('../config');
@@ -13,7 +15,8 @@ let refreshNews = () => {
     request(feed).pipe(new FeedParser())
       .on('error', (err) => done(err))
       .on('readable', () => {
-        while (let item = this.read()) done(null, item);
+        let item = null;
+        while (item = this.read()) done(null, item);
       });
   }, (err, results) => {
     if (err) return console.error(err);

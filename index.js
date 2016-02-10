@@ -1,3 +1,5 @@
+'use strict';
+
 const clever = require('./modules/clever');
 const config = require('./config');
 const date = require('./modules/date');
@@ -8,7 +10,7 @@ const rap = require('./modules/rap');
 const weather = require('./modules/weather');
 const youtube = require('./modules/youtube');
 
-let bot = new irc.Client(config.server, config.nick), {
+let bot = new irc.Client(config.server, config.nick, {
   channels: config.channels,
   floodProtection: true,
   realName: config.nick
