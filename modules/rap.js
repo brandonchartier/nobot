@@ -68,7 +68,7 @@ let makeRequest = (query, done) => {
 };
 
 let rap = (text, done) => {
-  let capture = regex.exec(test);
+  let capture = regex.exec(text);
   if (!capture) return false;
 
   makeRequest(capture[1], done);

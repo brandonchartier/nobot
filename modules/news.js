@@ -30,7 +30,7 @@ setInterval(refreshNews, 60 * 60 * 1000); //Every hour
 let news = (text, done) => {
   if (!regex.test(text)) return false;
 
-  if (!items.length) return done(null, 'News not found');
+  if (!cache.length) return done(null, 'News not found');
 
   let item = _.sample(cache);
   done(null, `${item.title}\n${item.link}`);
