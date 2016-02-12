@@ -27,7 +27,7 @@ let iterator = (x, done) => {
 let makeRequest = (xs, done) => {
   async.map(xs, iterator, (err, results) => {
     if (err) return done(err);
-    done(null, results);
+    done(null, _.sortBy(results).join('\n'));
   });
 };
 

@@ -11,17 +11,21 @@ let regex = new RegExp(`^${config.nick}[^\\s]*\\s+(?:news)$`, 'i');
 let cache = [];
 
 let refreshNews = () => {
-  async.map(config.newsfeeds, (feed, done) => {
-    request(feed).pipe(new FeedParser())
-      .on('error', (err) => done(err))
-      .on('readable', () => {
-        let item = null;
-        while (item = this.read()) done(null, item);
+  cache = [];
+
+  config.newsfeeds.forEach(function (feed) {
+    request(feed)
+      .pipe(new FeedParser())
+      .on('error', function (err) {
+        console.error(err);
+      })
+      .on('readable', function () {
+        let item;
+        while (item = this.read()) {
+          cache.push(item);
+        }
       });
-  }, (err, results) => {
-    if (err) return console.error(err);
-    cache = results;
-  })
+  });
 };
 
 refreshNews();

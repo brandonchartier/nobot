@@ -36,7 +36,7 @@ let lyrics = (tracks, done) => {
     uri: 'http://api.musixmatch.com/ws/1.1/track.lyrics.get',
     json: true,
     qs: {
-      'track_id': _sample(tracks).track.track_id,
+      'track_id': _.sample(tracks).track.track_id,
       'format': 'json',
       'apikey': config.musix.key
     }
