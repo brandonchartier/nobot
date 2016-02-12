@@ -13,7 +13,8 @@
     "request": "^2.40.0"
   },
   "scripts": {
-    "start": "node index.js"
+    "start": "node index.js",
+    "test": "xo --esnext"
   },
   "devDependencies": {
     "ava": "^0.11.0",

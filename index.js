@@ -10,37 +10,44 @@ const rap = require('./modules/rap');
 const weather = require('./modules/weather');
 const youtube = require('./modules/youtube');
 
-let bot = new irc.Client(config.server, config.nick, {
-  channels: config.channels,
-  floodProtection: true,
-  realName: config.nick
+const bot = new irc.Client(config.server, config.nick, {
+	channels: config.channels,
+	floodProtection: true,
+	realName: config.nick
 });
 
 bot.addListener('message', (nick, to, text) => {
-  // Don't bother replying to direct messages
-  if (to === config.nick) return;
+	// Don't bother replying to direct messages
+	if (to === config.nick) {
+		return;
+	}
 
-  let say = (err, msg, toNick) => {
-    if (err) return console.error(err);
-    bot.say(to, toNick ? `${nick}: ${msg}` : msg);
-  };
+	const say = (err, msg, toNick) => {
+		if (err) {
+			return console.error(err);
+		}
 
-  switch (true) {
-    case(youtube(text, say)):
-      break;
-    case(image(text, say)):
-      break;
-    case(weather(text, say)):
-      break;
-    case(rap(text, say)):
-      break;
-    case(news(text, say)):
-      break;
-    case(date(text, say)):
-      break;
-    default:
-      clever(text, say);
-  }
+		bot.say(to, toNick ? `${nick}: ${msg}` : msg);
+	};
+
+	switch (true) {
+		case youtube(text, say):
+			break;
+		case image(text, say):
+			break;
+		case weather(text, say):
+			break;
+		case rap(text, say):
+			break;
+		case news(text, say):
+			break;
+		case date(text, say):
+			break;
+		default:
+			clever(text, say);
+	}
 });
 
-bot.addListener('error', message => console.error(message));
+bot.addListener('error', message => {
+	console.error(message);
+});
