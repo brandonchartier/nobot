@@ -12,12 +12,35 @@
     "lodash": "^3.10.1",
     "request": "^2.40.0"
   },
-  "scripts": {
-    "start": "node index.js",
-    "test": "xo --esnext"
-  },
   "devDependencies": {
     "ava": "^0.11.0",
+    "nyc": "^5.6.0",
     "xo": "^0.12.1"
+  },
+  "scripts": {
+    "start": "node index.js",
+    "test": "xo && nyc ava"
+  },
+  "xo": {
+    "esnext": true,
+    "rules": {
+      "camelcase": [
+        2,
+        {
+          "properties": "never"
+        }
+      ]
+    }
+  },
+  "ava": {
+    "files": [
+      "tests/**/*.js"
+    ],
+    "verbose": true
+  },
+  "nyc": {
+    "exclude": [
+      "tests/**/*.js"
+    ]
   }
 }

@@ -51,3 +51,5 @@ bot.addListener('message', (nick, to, text) => {
 bot.addListener('error', message => {
 	console.error(message);
 });
+
+module.exports = bot;
