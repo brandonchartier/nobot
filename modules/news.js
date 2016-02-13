@@ -13,17 +13,32 @@ const refreshNews = () => {
 	cache = [];
 
 	config.newsfeeds.forEach(feed => {
-		request(feed)
-			.pipe(new FeedParser())
-			.on('error', err => {
-				console.error(err);
-			})
-			.on('readable', function () {
-				let item = null;
-				while (item = this.read()) {
-					cache.push(item);
-				}
-			});
+		const req = request(feed);
+		const parser = new FeedParser();
+
+		req.on('error', err => {
+			console.error(err);
+		});
+
+		req.on('response', res => {
+			if (res.statusCode !== 200) {
+				return req.emit('error', new Error('Bad status code'));
+			}
+
+			req.pipe(parser);
+		});
+
+		parser.on('error', err => {
+			console.error(err);
+		});
+
+		parser.on('readable', () => {
+			let item = parser.read();
+			while (item) {
+				cache.push(item);
+				item = parser.read();
+			}
+		});
 	});
 };
 
