@@ -7,10 +7,8 @@ const request = require('request');
 
 const regex = new RegExp(`^${config.nick}[^\\s]*\\s+(?:news)$`, 'i');
 
-let cache = [];
-
 const refreshNews = () => {
-	cache = [];
+	let cache = [];
 
 	config.newsfeeds.forEach(feed => {
 		const req = request(feed);
@@ -40,10 +38,15 @@ const refreshNews = () => {
 			}
 		});
 	});
+
+	return cache;
 };
 
-refreshNews();
-setInterval(refreshNews, 60 * 60 * 1000); // Every hour
+let cache = refreshNews();
+
+setInterval(() => {
+	cache = refreshNews();
+}, 60 * 60 * 1000); // Every hour
 
 const news = (text, done) => {
 	if (!regex.test(text)) {
