@@ -5,6 +5,9 @@
     "#chan1",
     "#chan2"
   ],
+  "logging": {
+    "level": "debug"
+  },
   "clever":{
     "user":"cleverbot_api_user",
     "key":"cleverbot_api_key"
