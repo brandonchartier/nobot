@@ -2,13 +2,14 @@
 
 const Cleverbot = require('cleverbot.io');
 const config = require('../config');
+const logger = require('../logger');
 
 const cleverbot = new Cleverbot(config.clever.user, config.clever.key);
 
 cleverbot.setNick(config.nick);
 cleverbot.create(err => {
 	if (err) {
-		console.error(err);
+		logger.error('clever', err);
 	}
 });
 
@@ -31,7 +32,9 @@ const clever = (text, done) => {
 		return false;
 	}
 
+	logger.regexMatch('clever', text, regex, capture);
 	makeRequest(capture[1], done);
+
 	return true;
 };
 

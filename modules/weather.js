@@ -3,6 +3,7 @@
 const _ = require('lodash');
 const async = require('async');
 const config = require('../config');
+const logger = require('../logger');
 const request = require('request');
 
 const regex = new RegExp(`^${config.nick}[^\\s]*\\s+(?:weather)$`, 'i');
@@ -21,6 +22,7 @@ const iterator = (x, done) => {
 		if (body.currently) {
 			done(null, `${x.city}: ${Math.round(body.currently.temperature)}° ${body.currently.summary}`);
 		} else {
+			logger.warn('city weather not found', x);
 			done(null, `${x.city} not found`);
 		}
 	});
@@ -41,7 +43,9 @@ const weather = (text, done) => {
 		return false;
 	}
 
+	logger.regexMatch('weather', text, regex);
 	makeRequest(config.weather.cities, done);
+
 	return true;
 };
 

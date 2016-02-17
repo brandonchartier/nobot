@@ -11,7 +11,7 @@ const rap = require('./modules/rap');
 const weather = require('./modules/weather');
 const youtube = require('./modules/youtube');
 
-logger.info(`Connecting to '${config.server}', channels: '${config.channels}'`);
+logger.info(`connecting to ${config.server}, channels: ${config.channels}`);
 
 const bot = new irc.Client(config.server, config.nick, {
 	channels: config.channels,
@@ -20,21 +20,25 @@ const bot = new irc.Client(config.server, config.nick, {
 });
 
 bot.addListener('registered', message => {
-	logger.info(`Connected to '${message.server}'`);
+	logger.info(`connected to ${message.server}`);
 });
 
 bot.addListener('message', (nick, to, text) => {
 	if (to === config.nick) {
-		logger.debug(`Ignoring private message from '${nick}'`);
+		logger.debug(`ignoring pm: <${nick}> ${text}`);
 		return;
 	}
 
 	const say = (err, msg, toNick) => {
 		if (err) {
-			return logger.error('Module error:', err);
+			return logger.error('module', err);
 		}
 
-		bot.say(to, toNick ? `${nick}: ${msg}` : msg);
+		msg = toNick ? `${nick}: ${msg}` : msg;
+		// refactor into logger, repeat for each line
+		logger.debug(`saying: [${to}] ${msg}`);
+
+		bot.say(to, msg);
 	};
 
 	switch (true) {
@@ -56,7 +60,7 @@ bot.addListener('message', (nick, to, text) => {
 });
 
 bot.addListener('error', message => {
-	logger.error('IRC error:', message);
+	logger.error('irc', message);
 });
 
 module.exports = bot;

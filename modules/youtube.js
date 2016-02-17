@@ -2,6 +2,7 @@
 
 const _ = require('lodash');
 const config = require('../config');
+const logger = require('../logger');
 const request = require('request');
 
 const regex = new RegExp(`^${config.nick}[^\\s]*\\s+(?:video|youtube)\\s(?:of\\s)?(.+)`, 'i');
@@ -26,6 +27,7 @@ const makeRequest = (query, done) => {
 
 		const videos = body.items;
 		if (!videos) {
+			logger.warn('0 videos found', body);
 			return done(null, 'Video not found', true);
 		}
 
@@ -40,7 +42,9 @@ const youtube = (text, done) => {
 		return false;
 	}
 
+	logger.regexMatch('youtube', text, regex, capture);
 	makeRequest(capture[1], done);
+
 	return true;
 };
 
