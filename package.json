@@ -20,7 +20,7 @@
   },
   "scripts": {
     "start": "node index.js",
-    "test": "xo && nyc ava"
+    "test": "xo && NODE_ENV=test nyc ava"
   },
   "xo": {
     "esnext": true,

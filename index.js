@@ -35,8 +35,7 @@ bot.addListener('message', (nick, to, text) => {
 		}
 
 		msg = toNick ? `${nick}: ${msg}` : msg;
-		// refactor into logger, repeat for each line
-		logger.debug(`saying: [${to}] ${msg}`);
+		logger.saying(to, msg);
 
 		bot.say(to, msg);
 	};
