@@ -5,10 +5,13 @@ const config = require('./config');
 const date = require('./modules/date');
 const image = require('./modules/image');
 const irc = require('irc');
+const logger = require('./logger');
 const news = require('./modules/news');
 const rap = require('./modules/rap');
 const weather = require('./modules/weather');
 const youtube = require('./modules/youtube');
+
+logger.info(`connecting to ${config.server}, channels: ${config.channels}`);
 
 const bot = new irc.Client(config.server, config.nick, {
 	channels: config.channels,
@@ -16,18 +19,25 @@ const bot = new irc.Client(config.server, config.nick, {
 	realName: config.nick
 });
 
+bot.addListener('registered', message => {
+	logger.info(`connected to ${message.server}`);
+});
+
 bot.addListener('message', (nick, to, text) => {
-	// Don't bother replying to direct messages
 	if (to === config.nick) {
+		logger.debug(`ignoring pm: <${nick}> ${text}`);
 		return;
 	}
 
 	const say = (err, msg, toNick) => {
 		if (err) {
-			return console.error(err);
+			return logger.error('module', err);
 		}
 
-		bot.say(to, toNick ? `${nick}: ${msg}` : msg);
+		msg = toNick ? `${nick}: ${msg}` : msg;
+		logger.saying(to, msg);
+
+		bot.say(to, msg);
 	};
 
 	switch (true) {
@@ -49,7 +59,7 @@ bot.addListener('message', (nick, to, text) => {
 });
 
 bot.addListener('error', message => {
-	console.error(message);
+	logger.error('irc', message);
 });
 
 module.exports = bot;

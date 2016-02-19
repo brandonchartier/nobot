@@ -3,6 +3,7 @@
 const _ = require('lodash');
 const async = require('async');
 const config = require('../config');
+const logger = require('../logger');
 const request = require('request');
 
 const regex = new RegExp(`^${config.nick}[^\\s]*\\s+(?:rap|sing)\\s(?:about\\s)?(.+)`, 'i');
@@ -28,6 +29,7 @@ const search = done => {
 
 		const tracks = body.message.body.track_list;
 		if (!tracks || !tracks.length) {
+			logger.debug('0 raps found', body);
 			return done('Rap not found');
 		}
 
@@ -53,6 +55,7 @@ const lyrics = (tracks, done) => {
 
 		const lyrics = body.message.body.lyrics;
 		if (lyrics.restricted === 1) {
+			logger.debug('lyrics restricted', lyrics);
 			return done('Nazty rap');
 		}
 
@@ -71,7 +74,7 @@ const makeRequest = (query, done) => {
 		lyrics
 	], (err, res) => {
 		if (err) {
-			done(null, err, true);
+			return done(null, err, true);
 		}
 
 		done(null, res);
@@ -84,7 +87,9 @@ const rap = (text, done) => {
 		return false;
 	}
 
+	logger.regexMatch('rap', text, regex, capture);
 	makeRequest(capture[1], done);
+
 	return true;
 };
 
