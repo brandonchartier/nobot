@@ -8,6 +8,7 @@ const irc = require('irc');
 const logger = require('./logger');
 const news = require('./modules/news');
 const rap = require('./modules/rap');
+const three = require('./modules/three');
 const weather = require('./modules/weather');
 const youtube = require('./modules/youtube');
 
@@ -52,6 +53,8 @@ bot.addListener('message', (nick, to, text) => {
 		case news(text, say):
 			break;
 		case date(text, say):
+			break;
+		case three(text, say):
 			break;
 		default:
 			clever(text, say);

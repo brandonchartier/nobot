@@ -30,7 +30,8 @@
         {
           "properties": "never"
         }
-      ]
+      ],
+      "no-unused-vars": 0
     }
   },
   "ava": {
