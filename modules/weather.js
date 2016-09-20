@@ -10,7 +10,7 @@ const regex = new RegExp(`^${config.nick}[^\\s]*\\s+(?:weather)$`, 'i');
 
 const iterator = (x, done) => {
 	const params = {
-		uri: `https://api.forecast.io/forecast/${config.weather.key}/${x.coords}`,
+		uri: `https://api.darksky.net/forecast/${config.weather.key}/${x.coords}`,
 		json: true
 	};
 
